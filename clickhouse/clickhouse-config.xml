@@ -3,6 +3,8 @@
         <level>warning</level>
         <console>true</console>
     </logger>
+    
+    <listen_host>0.0.0.0</listen_host>
 
     <!-- Stop all the unnecessary logging -->
     <query_thread_log remove="remove"/>
