@@ -5,11 +5,13 @@ services:
     restart: always
 
   plausible_db:
-    image: postgres:latest # or 13
+    image: postgres:13
     volumes:
       - db-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=plausible
+      - POSTGRES_USER=postgres
 
   plausible_events_db:
     image: yandex/clickhouse-server:latest
@@ -31,6 +33,9 @@ services:
       - mail
     ports:
       - 8000:8000
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@plausible_db:5432/plausible
+      - CLICKHOUSE_DATABASE_URL=http://plausible_events_db:8123/plausible_events_db
     env_file:
       - plausible-conf.env
 
