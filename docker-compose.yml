@@ -6,6 +6,7 @@ services:
 
   plausible_db:
     image: postgres:13
+    restart: always
     volumes:
       - db-data:/var/lib/postgresql/data
     environment:
@@ -15,6 +16,7 @@ services:
 
   plausible_events_db:
     image: yandex/clickhouse-server:latest
+    restart: always
     volumes:
       - event-data:/var/lib/clickhouse
       - ./clickhouse/clickhouse-config.xml:/etc/clickhouse-server/config.d/docker_related_config.xml:ro
@@ -27,6 +29,7 @@ services:
   plausible:
     image: plausible/analytics:latest
     command: sh -c "sleep 10 && /entrypoint.sh db createdb && /entrypoint.sh db migrate && /entrypoint.sh db init-admin && /entrypoint.sh run"
+    restart: always
     depends_on:
       - plausible_db
       - plausible_events_db
