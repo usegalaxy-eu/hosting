@@ -15,12 +15,12 @@ services:
       - POSTGRES_USER=postgres
 
   plausible_events_db:
-    image: yandex/clickhouse-server:latest
+    image: clickhouse/clickhouse-server:22.6-alpine
     restart: always
     volumes:
       - event-data:/var/lib/clickhouse
-      - ./clickhouse/clickhouse-config.xml:/etc/clickhouse-server/config.d/docker_related_config.xml:ro
-      - ./clickhouse/clickhouse-user-config.xml:/etc/clickhouse-server/users.d/docker_related_user_config.xml:ro
+      - ./clickhouse/clickhouse-config.xml:/etc/clickhouse-server/config.d/logging.xml:ro
+      - ./clickhouse/clickhouse-user-config.xml:/etc/clickhouse-server/users.d/logging.xml:ro
     ulimits:
       nofile:
         soft: 262144
@@ -28,8 +28,8 @@ services:
 
   plausible:
     image: plausible/analytics:latest
-    command: sh -c "sleep 10 && /entrypoint.sh db createdb && /entrypoint.sh db migrate && /entrypoint.sh db init-admin && /entrypoint.sh run"
     restart: always
+    command: sh -c "sleep 10 && /entrypoint.sh db createdb && /entrypoint.sh db migrate && /entrypoint.sh run"
     depends_on:
       - plausible_db
       - plausible_events_db
