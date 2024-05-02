@@ -3,6 +3,8 @@ services:
   mail:
     image: bytemark/smtp
     restart: always
+    env_file:
+      - plausible-mail-conf.env
 
   plausible_db:
     image: postgres:13
